@@ -1,4 +1,5 @@
 # script to generate structures where we must optimise both volumes and angles and then do singlepoint calculations on them
+# note that the .param and .cell (CASTEP) or .par and .eddp (repose) files specifying the job must be present already
 
 # input variables
 # minimum and maximum lattice parameters, lattice parameter step
@@ -9,10 +10,10 @@ a_step=$3
 alpha_min=$4
 alpha_max=$5
 alpha_step=$6
-# element - currently, single element is supported
-element=$7
-# energy solver - DFT, EDDP
-energy_solver=$8
+# energy solver - dft, eddp
+energy_solver=$7
+# number of mpi parallel threads per job
+mpinp=$8
 
 if [ "$#" -lt 8 ]; then
 	echo "Usage: 2D_QHA_generate_and_singlepoint.sh vmin vmax vstep amin amax astep element energy_solver"
@@ -20,8 +21,6 @@ if [ "$#" -lt 8 ]; then
 fi
 
 function generate_R-3m {
-
-mkdir hopper
 
 for a in `seq $a_min $a_max $a_step`; do
 	for alpha in `seq $alpha_min $alpha_max $alpha_step`; do
@@ -39,4 +38,25 @@ for a in `seq $a_min $a_max $a_step`; do
 	done
 done
 
+rm temp.cell
+
 }
+
+# determine element from the fileroot
+if [ $energy == "dft" ]; then
+	filename=`ls *.param`
+else
+	filename=`ls *.par`
+fi
+
+element=${filename%.*}
+
+mkdir hopper
+
+generate_R-3m
+
+if [ $energy == "dft" ]; then
+	spawn crud.pl -mpinp $mpinp
+else
+	spawn crud.pl -repose -mpinp $mpinp
+fi
