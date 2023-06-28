@@ -15,8 +15,8 @@ while getopts ":t:s:n:r:m:h" opt; do
 			# number of atoms for the supercell
 			natoms_supercell=$OPTARG;;
                 h)
-                        echo "Script to calculate the free energy of structures at different temperatures"
-                        echo "Usage: calculate_free_energy_wobble [-t max_temp] [-s t_step] [-n natoms_supercell]"
+                        echo "Script to calculate the vibrational energy of structures at different temperatures"
+                        echo "Usage: 2D_QHA_phonons.sh [-t max_temp] [-s t_step] [-n natoms_supercell]"
                         echo ""
                         echo "Optional arguments"
                         echo "-t max_temp [K]        : the highest temperature at which the vibrational energy is evaluated"
