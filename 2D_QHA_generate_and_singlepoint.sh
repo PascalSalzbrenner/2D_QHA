@@ -16,7 +16,7 @@ energy_solver=$7
 mpinp=$8
 
 if [ "$#" -lt 8 ]; then
-	echo "Usage: 2D_QHA_generate_and_singlepoint.sh vmin vmax vstep amin amax astep element energy_solver"
+	echo "Usage: 2D_QHA_generate_and_singlepoint.sh a_min a_max a_step alpha_min alpha_max alpha_step energy_solver mpinp"
 	exit 1
 fi
 
@@ -43,7 +43,7 @@ rm temp.cell
 }
 
 # determine element from the fileroot
-if [ $energy == "dft" ]; then
+if [ $energy_solver == "dft" ]; then
 	filename=`ls *.param`
 else
 	filename=`ls *.par`
@@ -55,7 +55,7 @@ mkdir hopper
 
 generate_R-3m
 
-if [ $energy == "dft" ]; then
+if [ $energy_solver == "dft" ]; then
 	spawn crud.pl -mpinp $mpinp
 else
 	spawn crud.pl -repose -mpinp $mpinp
