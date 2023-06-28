@@ -51,9 +51,10 @@ fi
 
 element=${filename%.*}
 
-mkdir hopper
-
-generate_R-3m
+if [ ! -d hopper ]; then
+	mkdir hopper
+	generate_R-3m
+fi
 
 if [ $energy_solver == "dft" ]; then
 	spawn crud.pl -mpinp $mpinp
