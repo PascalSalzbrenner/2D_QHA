@@ -22,8 +22,8 @@ fi
 
 function generate_R-3m {
 
-for a in `seq $a_min $a_max $a_step`; do
-	for alpha in `seq $alpha_min $alpha_max $alpha_step`; do
+for a in `seq $a_min $a_step $a_max`; do
+	for alpha in `seq $alpha_min $alpha_step $alpha_max`; do
 		echo "%block lattice_abc" > temp.cell
 		echo "$a $a $a" >> temp.cell
 		echo "$alpha $alpha $alpha" >> temp.cell
@@ -33,7 +33,7 @@ for a in `seq $a_min $a_max $a_step`; do
 		echo "$element 0 0 0" >> temp.cell
 		echo "%endblock positions_frac" >> temp.cell
 
-		cabal cell res < temp.cell > hopper/${element}-a_${a}-alpha_${alpha}.res
+		cabal cell res < temp.cell > hopper/${element}-a_${a//.}-alpha_${alpha//.}.res
 
 	done
 done
