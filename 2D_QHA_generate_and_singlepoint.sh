@@ -42,6 +42,11 @@ rm temp.cell
 
 }
 
+num_threads=`lscpu | awk '/^CPU\(s\)/ {print $2}'`
+threads_per_core=`lscpu | awk '/Thread/ {print $4}'`
+num_cores=$(awk "BEGIN {print $num_threads/$threads_per_core; exit}")
+num_simultaneous_jobs=$(awk "BEGIN {print $num_cores/$mpinp; exit}")
+
 # determine element from the fileroot
 if [ $energy_solver == "dft" ]; then
 	filename=`ls *.param`
@@ -57,7 +62,13 @@ if [ ! -d hopper ]; then
 fi
 
 if [ $energy_solver == "dft" ]; then
-	spawn crud.pl -mpinp $mpinp
+	exec=""
 else
-	spawn crud.pl -repose -mpinp $mpinp
+	exec="-repose"
 fi
+
+for i in `seq 1 $num_simultaneous_jobs`; do
+	crud.pl -mpinp $mpinp $exec &
+done
+
+wait
