@@ -3,42 +3,14 @@
 # script that uses the EDDP wobble phonon code to calculate the vibrational energies of a set of structures which were generated and whose whose static-lattice energies were calculated using the 2D_QHA_generate_and_singlepoint.sh script
 # must be run in the corresponding good_castep directory
 
-while getopts ":t:s:n:r:m:h" opt; do
-        case $opt in
-                t)
-			# maximum temperature at which we evaluate the vibrational energy
-                        max_temp=$OPTARG;;
-                s)
-			# step between temperatures
-                        t_step=$OPTARG;;
-                n)
-			# number of atoms for the supercell
-			natoms_supercell=$OPTARG;;
-                h)
-                        echo "Script to calculate the vibrational energy of structures at different temperatures"
-                        echo "Usage: 2D_QHA_phonons.sh [-t max_temp] [-s t_step] [-n natoms_supercell]"
-                        echo ""
-                        echo "Optional arguments"
-                        echo "-t max_temp [K]        : the highest temperature at which the vibrational energy is evaluated"
-                        echo "-s t_step [K]          : the increment between successive temperatures at which the vibrational energy is evaluated "
-                        echo "-n natoms_supercell    : the number of atoms in the supercell used for the phonon calculation"
-                        echo "-h                     : print this message and exit"
-                        echo ""
-                        echo "If no variables are supplied, the following defaults are used: -t 1000 -s 25 -n 1000"
-                        exit 1
-        esac
-done
+#input variables
+max_temp=$1 # highest temperature at which to print out the thermal energies
+t_step=$2 # temperature increment
+natom_supercell=$3 # number of atoms in the supercell used for the phonon calculation
 
-if [ -z $max_temp ]; then
-	max_temp=1000
-fi
-
-if [ -z $t_step ]; then
-	t_step=25
-fi
-
-if [ -z $natoms_supercell ]; then
-	natoms_supercell=1000
+if [ "$#" -lt 8 ]; then
+        echo "Usage: 2D_QHA_phonons.sh max_temp t_step natom_supercell"
+        exit 1
 fi
 
 # translate [max_temp, step] into the wobble-used [max_temp,ntemp]
