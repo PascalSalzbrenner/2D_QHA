@@ -16,6 +16,15 @@ fi
 # translate [max_temp, step] into the wobble-used [max_temp,ntemp]
 ntemp=$(awk "BEGIN {print 1+$max_temp/$t_step; exit}")
 
+# calculate number of simultaneous jobs such that the node is filled up
+num_threads=`lscpu | awk '/^CPU\(s\)/ {print $2}'`
+threads_per_core=`lscpu | awk '/Thread/ {print $4}'`
+num_cores=$(awk "BEGIN {print $num_threads/$threads_per_core; exit}")
+num_simultaneous_jobs=$(awk "BEGIN {print $num_cores/$ompnp; exit}")
+
+# set up counter to launch a number of jobs simultaneously
+counter=0
+
 # iterate over every single res file present in the directory
 for i in *.res; do
 	seed=${i%.*}
@@ -27,8 +36,21 @@ for i in *.res; do
 	cabal res cell < ${seed}.res > ${seed}.cell
 
 	# run wobble - stdout contains nothing but the energies [eV] as a function of temperature
-	wobble -therm -natom $natoms_supercell -unit meV -tmax $max_temp -ntemp $ntemp $seed 1> ${seed}_temperature_energy.dat 2> wobble.log
+	wobble -therm -ompnp $ompnp -natom $natoms_supercell -unit meV -tmax $max_temp -ntemp $ntemp $seed 1> ${seed}_temperature_energy.dat 2> wobble.log &
 	
+	counter=$((counter+1))
+
+	if [ $counter -eq $num_simultaneous_jobs ]; then
+                wait
+                # all jobs are done; next num_cores jobs can be started
+                counter=0
+	fi
+
+done
+
+for i in *.res; do
+        seed=${i%.*}
+
 	# wobble seems to create this even when -dos is not specified in the command - here, we delete it
 	rm -f ${seed}-dos.agr
 	
