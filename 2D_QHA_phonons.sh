@@ -24,7 +24,7 @@ while getopts ":t:s:n:r:m:h" opt; do
                         echo "-n natoms_supercell    : the number of atoms in the supercell used for the phonon calculation"
                         echo "-h                     : print this message and exit"
                         echo ""
-                        echo "If no variables are supplied, the following defaults are used: -t 1000 -s 5 -n 1000"
+                        echo "If no variables are supplied, the following defaults are used: -t 1000 -s 25 -n 1000"
                         exit 1
         esac
 done
@@ -34,7 +34,7 @@ if [ -z $max_temp ]; then
 fi
 
 if [ -z $t_step ]; then
-	t_step=5
+	t_step=25
 fi
 
 if [ -z $natoms_supercell ]; then
