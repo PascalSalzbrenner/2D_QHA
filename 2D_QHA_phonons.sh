@@ -8,7 +8,7 @@ max_temp=$1 # highest temperature at which to print out the thermal energies
 t_step=$2 # temperature increment
 natom_supercell=$3 # number of atoms in the supercell used for the phonon calculation
 
-if [ "$#" -lt 8 ]; then
+if [ "$#" -lt 3 ]; then
         echo "Usage: 2D_QHA_phonons.sh max_temp t_step natom_supercell"
         exit 1
 fi
