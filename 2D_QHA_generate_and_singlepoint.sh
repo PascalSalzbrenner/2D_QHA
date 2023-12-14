@@ -20,7 +20,7 @@ if [ "$#" -lt 8 ]; then
 	exit 1
 fi
 
-function generate_R-3m {
+function generate_R3_bar_m {
 
 for a in `seq $a_min $a_step $a_max`; do
 	for alpha in `seq $alpha_min $alpha_step $alpha_max`; do
@@ -58,7 +58,7 @@ element=${filename%.*}
 
 if [ ! -d hopper ]; then
 	mkdir hopper
-	generate_R-3m
+	generate_R3_bar_m
 fi
 
 if [ $energy_solver == "dft" ]; then
