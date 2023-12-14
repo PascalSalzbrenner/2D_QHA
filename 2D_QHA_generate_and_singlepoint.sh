@@ -12,7 +12,7 @@ alpha_max=$5
 alpha_step=$6
 # energy solver - dft, eddp
 energy_solver=$7
-# number of mpi parallel threads per job
+# number of parallel threads per job
 mpinp=$8
 
 if [ "$#" -lt 8 ]; then
