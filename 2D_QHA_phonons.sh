@@ -29,6 +29,12 @@ counter=0
 for i in *.res; do
 	seed=${i%.*}
 	form_name=`echo $i | awk 'BEGIN {FS="-"} {print $1}'`
+
+	# check if we have an appropriate EDDP file - else exit
+        if [ ! -f ../${form_name}.eddp ]; then
+                echo "No appropriate EDDP file ../${form_name}.eddp. Exiting."
+                exit 1
+        fi
 	
 	# copy the relevant .eddp to match the complete fileroot of the .res file
 	awk '{print "../" $0}' ../${form_name}.eddp > ${seed}.eddp
